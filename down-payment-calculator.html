@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Down Payment Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Down Payment Activity</h1>
+        <p>Home Price: <span id="home-price"></span></p>
+        <p>Down Payment Percentage: <span id="percent"></span>%</p>
+        <input type="number" id="student-answer" placeholder="Enter your down payment" step="0.01" />
+        <button onclick="checkAnswer()">Check Answer</button>
+        <p id="feedback"></p>
+        <button onclick="generateNumbers()">Generate New Numbers</button>
+    </div>
+
+    <script>
+        let correctAnswer = 0;
+
+        function generateRandomNumber(min, max, multiple) {
+            const range = max - min;
+            const factor = Math.floor(range / multiple);
+            return min + multiple * Math.floor(Math.random() * (factor + 1));
+        }
+
+        function generateNumbers() {
+            const homePrice = generateRandomNumber(50000, 1000000, 100);
+            const percent = generateRandomNumber(35, 250, 1) / 10; // Converts to range 3.5 to 25 in multiples of 0.1
+
+            document.getElementById('home-price').textContent = `$${homePrice.toLocaleString()}`;
+            document.getElementById('percent').textContent = percent.toFixed(1);
+
+            // Calculate correct answer
+            correctAnswer = (homePrice * (percent / 100)).toFixed(2);
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('student-answer').value = '';
+        }
+
+        function checkAnswer() {
+            const studentAnswer = parseFloat(document.getElementById('student-answer').value);
+            const feedback = document.getElementById('feedback');
+
+            if (isNaN(studentAnswer)) {
+                feedback.textContent = 'Please enter a valid number.';
+                return;
+            }
+
+            if (studentAnswer.toFixed(2) == correctAnswer) {
+                feedback.textContent = 'Correct!';
+                feedback.style.color = 'green';
+            } else {
+                feedback.textContent = `Incorrect. The correct answer is $${correctAnswer}.`;
+                feedback.style.color = 'red';
+            }
+        }
+
+        // Initialize with default numbers
+        generateNumbers();
+    </script>
+</body>
+</html>
